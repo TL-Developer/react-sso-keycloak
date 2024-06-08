@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:24.0.5
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HOSTNAME=localhost
+      - KC_HOSTNAME_PORT=8080
+      - KC_LOG_LEVEL=info
+    ports:
+      - 8080:8080
+
+  react-app-1:
+    container_name: react-app-1
+    ports:
+      - 3000:3000
+    depends_on:
+      - keycloak
+    build: 
+      context: ./react-app-1
+    environment:
+      - REACT_APP_CLIENT_SECRET=<your_client_secret>
+
+  react-app-2:
+    container_name: react-app-2
+    ports:
+      - 3001:3001
+    depends_on:
+      - keycloak
+    build: 
+      context: ./react-app-2
+    environment:
+      - REACT_APP_CLIENT_SECRET=<your_client_secret>
